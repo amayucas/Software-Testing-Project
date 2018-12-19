@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Subir una nueva foto{% endblock %}
+{% block section %}
+    <p align="center"><strong>Nueva Foto</strong></p>
+    {% if success_message %}<span style="color:green">{{ success_message|safe }}</span> {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <button>Subir Foto</button>
+        </div>
+    </form>
+{% endblock %}

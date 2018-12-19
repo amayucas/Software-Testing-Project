@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block section %}
+    <p align="center"><strong>Mis fotos</strong></p>
+    {% include 'photos\photos_loop.html' with photos_list=object_list %}
+{% endblock %}

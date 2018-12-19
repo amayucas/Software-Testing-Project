@@ -1,0 +1,2 @@
+from frikr.settings import *
+

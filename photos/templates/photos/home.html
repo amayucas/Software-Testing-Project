@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block section %}
+<h1 align="center">FRIKR</h1>
+    <p align="center">El portal donde lo que importa es todo menos las fotos</p>
+    {% if photos_list|length > 0 %}
+        <p align="center"><strong>Últimas fotos publicadas</strong></p>
+        {% include 'photos\photos_loop.html' %}
+    {% else %}
+        <h2>No hay fotos todavía.¡Se el primero en publicar una foto!</h2>
+    {% endif %}
+{% endblock %}
