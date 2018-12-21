@@ -29,7 +29,7 @@ class HomeView(View):
         context = {
             'photos_list': photos[:5]
         }
-        return render(request, 'photos\home.html', context)
+        return render(request, 'photos/home.html', context)
 
 
 class DetailView(View, PhotosQueryset):
@@ -49,7 +49,7 @@ class DetailView(View, PhotosQueryset):
             context = {
                 'photo': photo
             }
-            return render(request, 'photos\detail.html', context)
+            return render(request, 'photos/detail.html', context)
         else:
             return HttpResponseNotFound('La foto que estas buscando no existe')
 
@@ -90,7 +90,7 @@ class PhotoListView(View, PhotosQueryset):
         context = {
             'photos': self.get_photos_queryset(request)
         }
-        return render(request, 'photos\photos_list.html', context)
+        return render(request, 'photos/photos_list.html', context)
 
 
 class UserPhotosView(ListView):

@@ -12,7 +12,7 @@ class LoginView(View):
             'errors': error_messages,
             'login_form': form
         }
-        return render(request, 'users\login.html', context)
+        return render(request, 'users/login.html', context)
 
     def post(self, request):
         error_messages = []
@@ -34,7 +34,7 @@ class LoginView(View):
             'errors': error_messages,
             'login_form': form
         }
-        return render(request, 'users\login.html', context)
+        return render(request, 'users/login.html', context)
 
 class LogoutView(View):
     def get(self, request):
