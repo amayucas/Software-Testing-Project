@@ -3,6 +3,7 @@
 {% block section %}
     <p align="center"><strong>Nueva Foto</strong></p>
     {% if success_message %}<span style="color:green">{{ success_message|safe }}</span> {% endif %}
+    <br>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
@@ -10,4 +11,6 @@
             <button>Subir Foto</button>
         </div>
     </form>
+
+    You have uploaded {{ nof }} pictures.
 {% endblock %}

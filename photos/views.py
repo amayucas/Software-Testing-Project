@@ -22,6 +22,11 @@ class PhotosQueryset(object):
         return photos
 
 
+    def get_number_of_photos_from_user(self, request):
+        number_of_photos = len(Photo.objects.filter(Q(owner=request.user)))
+        return number_of_photos
+
+
 class HomeView(View):
 
     def get(self, request):
@@ -54,32 +59,43 @@ class DetailView(View, PhotosQueryset):
             return HttpResponseNotFound('La foto que estas buscando no existe')
 
 
-class CreateView(View):
+class CreateView(View, PhotosQueryset):
     @method_decorator(login_required())
     def get(self, request):
         form = PhotoForm()
+        number_of_photos_uploaded = self.get_number_of_photos_from_user(request)
         context = {
             'form': form,
-            'success_message': ''
+            'success_message': '',
+            'nof': number_of_photos_uploaded
         }
+
         return render(request, 'photos/new_photo.html', context)
 
     @method_decorator(login_required())
     def post(self, request):
-        success_message= ''
-        photo_with_owner = Photo()
-        photo_with_owner.owner = request.user
-        form = PhotoForm(request.POST, instance=photo_with_owner)
-        if form.is_valid():
-            new_photo = form.save()
+        success_message = ''
+        number_of_photos_uploaded = self.get_number_of_photos_from_user(request)
+        if number_of_photos_uploaded >= 25:
             form = PhotoForm()
-            success_message = 'Guardado con éxito'
-            success_message += '<a href="{0}">'.format(reverse('photos_detail', args=[new_photo.pk]))
-            success_message += 'Ver foto'
-            success_message += '</a>'
+            success_message = 'didnt work'
+        else:
+            photo_with_owner = Photo()
+            photo_with_owner.owner = request.user
+            form = PhotoForm(request.POST, instance=photo_with_owner)
+            if form.is_valid():
+                new_photo = form.save()
+                form = PhotoForm()
+                success_message = 'Guardado con éxito'
+                success_message += '<br>'
+                success_message += '<br>'
+                success_message += '<a href="{0}">'.format(reverse('photos_detail', args=[new_photo.pk]))
+                success_message += 'Ver foto'
+                success_message += '</a>'
         context = {
             'form': form,
-            'success_message': success_message
+            'success_message': success_message,
+            'nof': number_of_photos_uploaded
         }
         return render(request, 'photos/new_photo.html', context)
 
