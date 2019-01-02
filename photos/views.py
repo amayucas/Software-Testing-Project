@@ -67,7 +67,8 @@ class CreateView(View, PhotosQueryset):
         context = {
             'form': form,
             'success_message': '',
-            'nof': number_of_photos_uploaded
+            'nof': number_of_photos_uploaded,
+            'nof2': 25 - number_of_photos_uploaded
         }
 
         return render(request, 'photos/new_photo.html', context)
@@ -76,9 +77,9 @@ class CreateView(View, PhotosQueryset):
     def post(self, request):
         success_message = ''
         number_of_photos_uploaded = self.get_number_of_photos_from_user(request)
-        if number_of_photos_uploaded >= 25:
+        if not check_if_uploads_remaining(number_of_photos_uploaded):
             form = PhotoForm()
-            success_message = 'didnt work'
+            success_message = 'Ya has subido 25 fotos. Has alcansado el limite.'
         else:
             photo_with_owner = Photo()
             photo_with_owner.owner = request.user
@@ -95,7 +96,8 @@ class CreateView(View, PhotosQueryset):
         context = {
             'form': form,
             'success_message': success_message,
-            'nof': number_of_photos_uploaded
+            'nof': number_of_photos_uploaded,
+            'nof2': 25-number_of_photos_uploaded
         }
         return render(request, 'photos/new_photo.html', context)
 
@@ -117,3 +119,15 @@ class UserPhotosView(ListView):
         queryset = super(UserPhotosView, self).get_queryset()
         return queryset.filter(owner=self.request.user)
 
+
+def check_if_uploads_remaining(number_of_uploaded_pictures):
+    if type(number_of_uploaded_pictures) not in [int]:
+        raise TypeError("The number of uploaded pictures must be a positive Integer")
+
+    if number_of_uploaded_pictures < 0:
+        raise ValueError("The number of uploaded pictures can't be negative")
+
+    if number_of_uploaded_pictures >= 25:
+        return False
+
+    return True

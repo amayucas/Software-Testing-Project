@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from photos.models import Photo
+from photos.views import check_if_uploads_remaining
+import sys
 import unittest
 
 
@@ -45,6 +47,23 @@ class TestStringMethods(unittest.TestCase):
         # check that s.split fails when the separator is not a string
         with self.assertRaises(TypeError):
             s.split(2)
+
+
+class TestCheckIfUploads(unittest.TestCase):
+
+    def test_check_positive_integer(self):
+        self.assertEqual(check_if_uploads_remaining(0), True)
+        self.assertEqual(check_if_uploads_remaining(1), True)
+        self.assertEqual(check_if_uploads_remaining(24), True)
+        self.assertEqual(check_if_uploads_remaining(25), False)
+        self.assertEqual(check_if_uploads_remaining(sys.maxsize), False)
+
+    def test_check_negative_integer(self):
+        self.assertRaises(ValueError, check_if_uploads_remaining, -1)
+        self.assertRaises(ValueError, check_if_uploads_remaining, -1*sys.maxsize)
+
+    def test_check_types(self):
+        self.assertRaises(TypeError, check_if_uploads_remaining, "test")
 
 
 if __name__ == '__main__':
